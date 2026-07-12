@@ -17,7 +17,7 @@ Que el usuario pueda fotografiar un ticket y que la app lo lea automáticamente 
 - RF-01: El sistema debe permitir fotografiar un ticket y extraer automáticamente los productos y precios mediante OCR (la fecha y el nombre del súper no se obtienen por OCR: los indica el usuario, ver RF-11).
 - RF-02: El sistema debe permitir al usuario corregir los productos y precios extraídos antes de confirmar el guardado.
 - RF-03: El sistema debe permitir cargar productos y precios manualmente cuando el OCR no pueda leer el ticket.
-- RF-04: El sistema debe almacenar cada compra con fecha, súper, lista de productos y precios.
+- RF-04: El sistema debe almacenar cada compra con fecha, súper, y la lista de productos, guardando el precio por unidad de cada producto en esa compra.
 - RF-05: El sistema debe mostrar el historial de precios de un producto, separado por súper, aclarando en la UI que los valores están en pesos nominales (sin ajuste por inflación).
 - RF-06: Al confirmar una extracción, el sistema debe buscar productos existentes del catálogo por similitud de texto (fuzzy: normaliza mayúsculas, acentos y abreviaturas, y compara) y sugerir al usuario los candidatos encontrados; el usuario debe confirmar o rechazar la asociación antes de guardar, y el sistema nunca asocia el producto de forma automática (ej. "leche entera 1L" vs "leche SL 1000cc").
 - RF-07: El sistema debe permitir al usuario fusionar dos o más productos existentes del catálogo en uno solo, en cualquier momento, uniendo sus historiales de precio.
@@ -35,7 +35,7 @@ Que el usuario pueda fotografiar un ticket y que la app lo lea automáticamente 
 - AC-01 (RF-01): Dado un ticket fotografiado con 10 productos legibles, cuando se procesa, entonces la app muestra al menos 9 productos cuyo nombre y precio coinciden con lo impreso en el ticket.
 - AC-02 (RF-01): Dado un ticket con imagen borrosa o muy arrugada, cuando se procesa, entonces la app informa que no pudo leerlo en lugar de mostrar datos incorrectos.
 - AC-03 (RF-01 / RF-02): Dado un ticket con una línea de descuento o promoción (ej. "2x1", "desc. 10%"), cuando se procesa, entonces la app no la registra como un producto nuevo; el usuario puede ajustar el precio del producto afectado al precio final pagado antes de confirmar (vía RF-02).
-- AC-04 (RF-01): Dado un ticket con el mismo producto en dos líneas distintas (ej. 2 unidades cargadas por separado), cuando se procesa, entonces ambas líneas se asocian al mismo producto del catálogo, sin duplicarlo, conservando cada precio/cantidad de esa compra.
+- AC-04 (RF-01): Dado un ticket con el mismo producto en dos líneas distintas (ej. 2 unidades cargadas por separado), cuando se procesa, entonces la app las consolida en un único ítem del ticket (sin duplicar la línea), conservando el precio por unidad; la asociación de ese ítem a un producto del catálogo se resuelve vía RF-06 (el usuario confirma, y si es un producto nuevo lo verifica manualmente).
 - AC-05 (RF-02): Dado un producto extraído con precio incorrecto, cuando el usuario lo edita y confirma, entonces el precio corregido queda guardado y el original descartado.
 - AC-06 (RF-03): Dado un ticket ilegible, cuando el OCR no puede procesarlo, entonces la app informa el error y habilita la carga manual.
 - AC-07 (RF-04): Dado un ticket procesado con 5 productos confirmados, cuando el usuario guarda, entonces la compra queda registrada con fecha, nombre del súper y los 5 productos con sus precios.
@@ -76,8 +76,10 @@ Que el usuario pueda fotografiar un ticket y que la app lo lea automáticamente 
 - Dependencia: API de OCR o modelo de visión para lectura de tickets.
 - Dependencia: backend con base de datos para persistir compras, productos, precios y supermercados. Los datos se guardan en el servidor (no solo en el dispositivo), por lo que persisten aunque el usuario cambie de equipo o borre el navegador. Esto agrega infraestructura al MVP, pero deja mejor preparada la base para las funcionalidades de v2 (góndola, métricas, tipo de cambio).
 
-## Notas técnicas sugeridas (no vinculante)
-Sugerencia recibida en la devolución, a evaluar en el diseño técnico (no es un requerimiento de producto):
-- Front: React o Next.js, responsive.
-- Back: FastAPI o Node/NestJS para procesar imágenes y guardar historial.
-- Base de datos: PostgreSQL o SQLite para compras, productos, precios y supermercados.
+## Stack técnico (fijado)
+El stack del proyecto ya está decidido (ver AGENTS.md); se deja acá como referencia (no es un requerimiento de producto):
+- Front: Next.js (React) + TypeScript, responsive (móvil primero).
+- Back: API routes de Next.js (mismo repo, sin servidor aparte).
+- OCR: Tesseract vía `tesseract.js` (local, sin API key).
+- Base de datos: SQLite para compras, productos, precios y supermercados.
+- Runtime: Node 20+.
