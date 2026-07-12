@@ -1,6 +1,6 @@
 ---
 name: create-prd
-description: Crea o audita un PRD siguiendo el template y el checklist de calidad del curso, con un loop de auditar → el usuario juzga → reescribir lo aprobado. Usar cuando el usuario pide crear, revisar, endurecer o "afilar" un PRD o documento de requerimientos. No inventa features ni reescribe sin aprobación.
+description: Crea o audita un PRD siguiendo el template y el checklist de calidad del curso, con un loop de auditar → el usuario juzga → reescribir lo aprobado. Usar cuando el usuario pide crear, escribir, revisar, auditar, endurecer o "afilar" un PRD o documento de requerimientos. No inventa features ni reescribe sin aprobación.
 ---
 
 # create-prd
@@ -17,8 +17,10 @@ está enterrado bajo miles de líneas de código.
 
 ## Pasos
 
-1. **Leer el PRD** (por defecto `PRD.md`; si no existe, preguntar la ruta o armarlo desde cero con el usuario). Trabajar solo con ese documento.
-2. **Normalizar la estructura** contra el template de abajo: pasar a Markdown si hace falta y marcar qué secciones faltan o están fuera de lugar. No inventar contenido, solo ordenar.
+1. **Ubicar el punto de partida.**
+   - **PRD nuevo (desde cero):** hacer TODAS las preguntas necesarias ANTES de escribir una línea — el dolor real, las personas, las features core, las restricciones. No inventar requerimientos.
+   - **PRD existente** (por defecto `PRD.md`; si no está, preguntar la ruta): leerlo y, si no está en Markdown limpio, pasarlo a Markdown. Trabajar solo con ese documento.
+2. **Normalizar la estructura** contra el template de abajo: marcar qué secciones faltan o están fuera de lugar; si falta alguna, agregar el encabezado vacío para dejar el molde completo. No inventar contenido, solo ordenar.
 3. **Auditar el contenido** con el checklist, hallazgo por hallazgo, diciendo dónde está y por qué. Marcar los debatibles como tales, para que el usuario pueda rechazarlos con criterio.
 4. **El usuario juzga** cada hallazgo (cuáles sí, cuáles no, cuáles van a "Fuera de Alcance").
 5. **Reescribir solo lo aprobado** y dejar el resto igual. IDs estables: agregar al final o renumerar en cadena, avisando el criterio usado.
@@ -28,13 +30,13 @@ está enterrado bajo miles de líneas de código.
 
 ```
 # PRD-001: <proyecto> — <una línea de qué es>
-## Contexto y Problema
-## Objetivos
-## Requerimientos Funcionales     (RF-01, RF-02, …)
-## Requerimientos No Funcionales  (RNF-01, …)
-## Criterios de Aceptación        (AC-01 (RF-01): Dado / Cuando / Entonces)
-## Fuera de Alcance
-## Riesgos y Dependencias
+## Contexto y Problema           (el dolor real y para quién; personas: quién lo usa y qué necesita)
+## Objetivos                     (qué significa ganar, a nivel producto)
+## Requerimientos Funcionales    (RF-01, RF-02, … — "El sistema debe <una sola acción>")
+## Requerimientos No Funcionales (RNF-01, … — cualidad CON número: "< 3 s p95", "≥ 85%")
+## Criterios de Aceptación       (AC-01 (RF-01): Dado <contexto>, cuando <acción>, entonces <resultado medible>)
+## Fuera de Alcance              (lo que explícitamente NO entra)
+## Riesgos y Dependencias        (riesgo → mitigación; de qué depende)
 ```
 
 ## Checklist de auditoría
