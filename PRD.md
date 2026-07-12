@@ -23,7 +23,7 @@ Que el usuario pueda fotografiar un ticket y que la app lo lea automáticamente 
 - RF-07: El sistema debe permitir al usuario fusionar dos o más productos existentes del catálogo en uno solo, en cualquier momento, uniendo sus historiales de precio.
 - RF-08: El sistema debe permitir al usuario renombrar un producto existente del catálogo, en cualquier momento, conservando su historial de precios.
 - RF-09: El sistema debe permitir cargar un mismo ticket en más de una foto (para tickets largos que no entran en una sola imagen): en una única acción de carga el usuario selecciona/toma varias fotos, y el sistema las procesa y consolida los productos de todas ellas en un único registro de compra.
-- RF-10: El sistema debe funcionar de forma responsive para su uso desde el celular.
+- RF-10: El sistema debe funcionar de forma responsive para su uso desde el celular (usable hasta 390px de ancho sin scroll horizontal).
 - RF-11: El sistema debe solicitar al usuario la fecha y el nombre del súper al iniciar la carga de un ticket (estos datos no se obtienen por OCR); el usuario puede modificarlos antes de confirmar el guardado.
 
 ## Requerimientos No Funcionales
