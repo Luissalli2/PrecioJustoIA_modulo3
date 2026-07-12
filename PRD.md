@@ -18,7 +18,7 @@ Que el usuario pueda fotografiar un ticket y que la app lo lea automáticamente 
 - RF-02: El sistema debe permitir al usuario corregir los productos y precios extraídos antes de confirmar el guardado.
 - RF-03: El sistema debe permitir cargar productos y precios manualmente cuando el OCR no pueda leer el ticket.
 - RF-04: El sistema debe almacenar cada compra con fecha, súper, lista de productos y precios.
-- RF-05: El sistema debe mostrar el historial de precios de un producto, separado por súper.
+- RF-05: El sistema debe mostrar el historial de precios de un producto, separado por súper, aclarando en la UI que los valores están en pesos nominales (sin ajuste por inflación).
 - RF-06: Al confirmar una extracción, el sistema debe buscar productos existentes del catálogo por similitud de texto (fuzzy: normaliza mayúsculas, acentos y abreviaturas, y compara) y sugerir al usuario los candidatos encontrados; el usuario debe confirmar o rechazar la asociación antes de guardar, y el sistema nunca asocia el producto de forma automática (ej. "leche entera 1L" vs "leche SL 1000cc").
 - RF-07: El sistema debe permitir al usuario fusionar dos o más productos existentes del catálogo en uno solo, en cualquier momento, uniendo sus historiales de precio.
 - RF-08: El sistema debe permitir al usuario renombrar un producto existente del catálogo, en cualquier momento, conservando su historial de precios.
