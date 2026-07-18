@@ -1,0 +1,262 @@
+/* Estilos base, móvil-primero (RF-10: usable hasta 390px sin scroll horizontal). */
+:root {
+  --bg: #0f1115;
+  --card: #171a21;
+  --border: #262b36;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #4f8cff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden; /* garantiza que nada empuje scroll horizontal */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+.contenedor {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0 0 4px;
+}
+
+.subtitulo {
+  color: var(--muted);
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+}
+
+.tarjeta {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.tarjeta a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.stat {
+  display: flex;
+  gap: 24px;
+}
+
+.stat div {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat .n {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.stat .l {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.nota {
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-left: 2px solid var(--border);
+  padding-left: 10px;
+  margin-top: 20px;
+}
+
+/* --- Botones y acciones --- */
+.acciones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-secundario {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* --- Formulario --- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.campo span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+input,
+select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+.items {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 0 0 16px;
+}
+
+.items legend {
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 0 6px;
+}
+
+.fila-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.fila-nombre {
+  flex: 1 1 auto;
+  min-width: 0; /* evita overflow horizontal en 390px */
+}
+
+.fila-precio {
+  flex: 0 0 96px;
+  width: 96px;
+}
+
+.btn-quitar {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.btn-quitar:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
+/* --- Catálogo (tarjeta que es link al historial) --- */
+.tarjeta-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.tarjeta-link:hover {
+  border-color: var(--accent);
+}
+
+.tarjeta-link .chevron {
+  color: var(--muted);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* --- Historial de precios --- */
+.volver {
+  margin: 0 0 8px;
+}
+
+.volver a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.super-nombre {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+
+.historial {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.historial li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+}
+
+.historial li:first-child {
+  border-top: none;
+}
+
+.historial .fecha {
+  color: var(--muted);
+}
+
+.historial .precio {
+  font-weight: 600;
+}
