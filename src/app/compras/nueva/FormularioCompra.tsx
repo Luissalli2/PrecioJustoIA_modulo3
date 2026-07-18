@@ -10,6 +10,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { reconocerTicket } from "@/lib/ocr";
+import { parseTicket } from "@/lib/ticket-parser";
 
 interface Props {
   supers: { id: number; nombre: string }[];
@@ -46,6 +48,33 @@ export default function FormularioCompra({ supers }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [ok, setOk] = useState(false);
+
+  // Estado del OCR (RF-01): idle → leyendo (con progreso) → ok | error.
+  const [ocrEstado, setOcrEstado] = useState<"idle" | "leyendo" | "ok" | "error">("idle");
+  const [ocrTexto, setOcrTexto] = useState("");
+
+  async function leerTicket(file: File) {
+    setOcrEstado("leyendo");
+    setOcrTexto("Preparando…");
+    setError(null);
+    try {
+      const texto = await reconocerTicket(file, (p) => {
+        setOcrTexto(p.fase === "leyendo" ? `Leyendo ticket… ${Math.round(p.progreso * 100)}%` : `${p.fase}…`);
+      });
+      const items = parseTicket(texto);
+      if (items.length === 0) {
+        // El OCR no encontró líneas de producto legibles (AC-02, AC-06):
+        // no inventamos datos; se informa y queda la carga manual disponible.
+        setOcrEstado("error");
+        return;
+      }
+      // Pre-carga las filas con lo leído; el usuario corrige antes de confirmar (RF-02).
+      setFilas(items.map((it) => ({ nombre: it.producto, precio: String(it.precioPorUnidad) })));
+      setOcrEstado("ok");
+    } catch {
+      setOcrEstado("error");
+    }
+  }
 
   function patchFila(i: number, cambios: Partial<Fila>) {
     setFilas((prev) => prev.map((f, idx) => (idx === i ? { ...f, ...cambios } : f)));
@@ -150,6 +179,29 @@ export default function FormularioCompra({ supers }: Props) {
 
   return (
     <form onSubmit={guardar}>
+      <div className="ocr tarjeta">
+        <label className="campo" style={{ marginBottom: 0 }}>
+          <span>Foto del ticket (opcional)</span>
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            disabled={ocrEstado === "leyendo"}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) leerTicket(f);
+            }}
+          />
+        </label>
+        {ocrEstado === "leyendo" && <p className="hint">{ocrTexto}</p>}
+        {ocrEstado === "ok" && <p className="hint">✅ Ticket leído. Revisá y corregí abajo antes de guardar.</p>}
+        {ocrEstado === "error" && (
+          <p className="hint">
+            No pudimos leer el ticket. Probá con una foto más nítida o cargá los productos a mano.
+          </p>
+        )}
+      </div>
+
       <label className="campo">
         <span>Súper</span>
         <input
