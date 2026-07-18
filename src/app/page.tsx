@@ -1,9 +1,10 @@
-// Home: resumen del catálogo con acceso a registrar una compra.
-// Lee la base en cada request (datos siempre frescos).
+// Home: resumen del catálogo con búsqueda por nombre (RF-12). Cada producto
+// linkea a su historial de precios (RF-05). Lee la base en cada request.
 
 import { getDb } from "@/lib/db";
 import { listarSupers } from "@/lib/repo/supers";
 import { listarProductos } from "@/lib/repo/productos";
+import BuscadorProductos from "./BuscadorProductos";
 
 export const dynamic = "force-dynamic";
 
@@ -36,19 +37,7 @@ export default function Home() {
         </div>
       </div>
 
-      {productos.length === 0 ? (
-        <div className="tarjeta">
-          <p style={{ margin: 0 }}>
-            Todavía no hay datos. Corré <code>npm run seed</code> para cargar ejemplos.
-          </p>
-        </div>
-      ) : (
-        productos.map((p) => (
-          <div className="tarjeta" key={p.id}>
-            {p.nombre}
-          </div>
-        ))
-      )}
+      <BuscadorProductos productos={productos} />
 
       <p className="nota">
         Los precios se muestran en pesos nominales (sin ajuste por inflación).
