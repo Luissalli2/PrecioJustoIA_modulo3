@@ -1,16 +1,21 @@
 // Servicio de carga manual de una compra (paso 2 del plan → RF-03, RF-04, RF-11).
 // Orquesta súper + productos + compra en una sola transacción, a partir de los
-// NOMBRES que escribió el usuario. Sin OCR y sin sugerencia fuzzy (eso es RF-06,
-// pasos 4 y 5): acá el usuario tipea todo a mano.
+// NOMBRES que escribió el usuario.
+//
+// Asociación a un producto existente (RF-06): si el ítem trae `productoId`, es
+// porque el usuario CONFIRMÓ en la UI que es un producto del catálogo (a partir
+// de una sugerencia por similitud). Nunca se asocia solo: sin productoId, se
+// reutiliza por nombre exacto o se crea nuevo.
 
 import type { Database } from "better-sqlite3";
 import { obtenerOCrearSuper } from "../repo/supers.ts";
-import { obtenerOCrearProducto } from "../repo/productos.ts";
+import { obtenerOCrearProducto, obtenerProducto } from "../repo/productos.ts";
 import { crearCompra } from "../repo/compras.ts";
 
 export interface ItemManual {
   nombre: string;
   precioPorUnidad: number;
+  productoId?: number; // presente si el usuario asoció a un producto existente (RF-06)
 }
 
 export interface CompraManual {
@@ -29,7 +34,11 @@ export function registrarCompraManual(db: Database, entrada: CompraManual): numb
   if (superNombre === "") throw new Error("Elegí o ingresá un súper");
 
   const items = (entrada.items ?? [])
-    .map((i) => ({ nombre: i.nombre?.trim() ?? "", precioPorUnidad: i.precioPorUnidad }))
+    .map((i) => ({
+      nombre: i.nombre?.trim() ?? "",
+      precioPorUnidad: i.precioPorUnidad,
+      productoId: i.productoId,
+    }))
     .filter((i) => i.nombre !== "");
   if (items.length === 0) throw new Error("Agregá al menos un producto");
   for (const it of items) {
@@ -40,10 +49,20 @@ export function registrarCompraManual(db: Database, entrada: CompraManual): numb
 
   const tx = db.transaction(() => {
     const sup = obtenerOCrearSuper(db, superNombre);
-    const itemsCompra = items.map((it) => ({
-      productoId: obtenerOCrearProducto(db, it.nombre).id,
-      precioPorUnidad: it.precioPorUnidad,
-    }));
+    const itemsCompra = items.map((it) => {
+      // Con productoId, el usuario ya confirmó la asociación a un producto del
+      // catálogo (RF-06); solo verificamos que exista. Sin él, exacto o nuevo.
+      let productoId: number;
+      if (it.productoId != null && Number.isInteger(it.productoId)) {
+        if (!obtenerProducto(db, it.productoId)) {
+          throw new Error(`El producto asociado a "${it.nombre}" no existe`);
+        }
+        productoId = it.productoId;
+      } else {
+        productoId = obtenerOCrearProducto(db, it.nombre).id;
+      }
+      return { productoId, precioPorUnidad: it.precioPorUnidad };
+    });
     return crearCompra(db, { superId: sup.id, fecha: entrada.fecha, items: itemsCompra });
   });
 

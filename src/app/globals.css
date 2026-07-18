@@ -198,11 +198,60 @@ input:focus {
   padding: 0 6px;
 }
 
+.fila-bloque {
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
 .fila-item {
   display: flex;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   align-items: center;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.link:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+
+.candidatos {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.candidatos li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.asociado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 6px 0 0;
 }
 
 .fila-nombre {

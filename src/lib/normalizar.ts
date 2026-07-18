@@ -49,16 +49,24 @@ export function normalizarNombre(nombre: string): string {
 }
 
 /**
- * Similitud [0..1] entre dos nombres, por coeficiente de Jaccard sobre los
- * tokens normalizados. Simple y suficiente para SUGERIR (no para decidir).
+ * Similitud [0..1] entre dos nombres. Combina el coeficiente de Jaccard de los
+ * tokens con un peso fuerte al PRIMER token (el sustantivo del producto: "leche",
+ * "aceite"…), que en góndola es la señal dominante. Así "Leche entera 1L" y
+ * "LECHE SUP 1000CC" caen cerca aunque el resto difiera (AC-09), sin confundir
+ * "leche" con "yerba". Es para SUGERIR, no para decidir: el usuario confirma.
  */
 export function similitud(a: string, b: string): number {
-  const ta = new Set(normalizarNombre(a).split(" ").filter(Boolean));
-  const tb = new Set(normalizarNombre(b).split(" ").filter(Boolean));
-  if (ta.size === 0 && tb.size === 0) return 1;
+  const ta = normalizarNombre(a).split(" ").filter(Boolean);
+  const tb = normalizarNombre(b).split(" ").filter(Boolean);
+  if (ta.length === 0 && tb.length === 0) return 1;
 
+  const sa = new Set(ta);
+  const sb = new Set(tb);
   let interseccion = 0;
-  for (const t of ta) if (tb.has(t)) interseccion++;
-  const union = ta.size + tb.size - interseccion;
-  return union === 0 ? 0 : interseccion / union;
+  for (const t of sa) if (sb.has(t)) interseccion++;
+  const union = sa.size + sb.size - interseccion;
+  const jaccard = union === 0 ? 0 : interseccion / union;
+
+  const mismaCabeza = ta.length > 0 && tb.length > 0 && ta[0] === tb[0] ? 1 : 0;
+  return 0.5 * mismaCabeza + 0.5 * jaccard;
 }

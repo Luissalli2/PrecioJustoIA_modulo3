@@ -6,7 +6,7 @@ import Database from "better-sqlite3";
 
 import { registrarCompraManual } from "./registrar-compra.ts";
 import { listarSupers } from "../repo/supers.ts";
-import { listarProductos } from "../repo/productos.ts";
+import { listarProductos, crearProducto } from "../repo/productos.ts";
 import { historialDeProducto } from "../repo/compras.ts";
 
 function nuevaBase(): Database.Database {
@@ -42,6 +42,35 @@ test("reutiliza el súper existente y no lo duplica (RF-11)", () => {
   // El historial acumula ambas compras del mismo producto.
   const historial = historialDeProducto(db, listarProductos(db)[0].id);
   assert.equal(historial[0].puntos.length, 2);
+});
+
+test("con productoId asocia al producto existente y NO crea uno nuevo (RF-06)", () => {
+  const db = nuevaBase();
+  const leche = crearProducto(db, "Leche entera 1L");
+
+  // El OCR/usuario tipeó otra variante, pero confirmó que es el producto ya existente.
+  registrarCompraManual(db, {
+    superNombre: "Coto",
+    fecha: "2026-05-01",
+    items: [{ nombre: "LECHE SUP 1000CC", precioPorUnidad: 1400, productoId: leche.id }],
+  });
+
+  assert.equal(listarProductos(db).length, 1, "no se crea un producto nuevo: se asoció al existente");
+  const historial = historialDeProducto(db, leche.id);
+  assert.equal(historial[0].puntos[0].precioPorUnidad, 1400);
+});
+
+test("con productoId inexistente, rechaza (no inventa asociación)", () => {
+  const db = nuevaBase();
+  assert.throws(
+    () =>
+      registrarCompraManual(db, {
+        superNombre: "Coto",
+        fecha: "2026-05-01",
+        items: [{ nombre: "X", precioPorUnidad: 10, productoId: 999 }],
+      }),
+    /no existe/,
+  );
 });
 
 test("rechaza compra sin súper, sin ítems o con precio inválido", () => {

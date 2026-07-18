@@ -13,3 +13,10 @@ test("similitud es alta entre variantes del mismo producto y baja entre distinto
   assert.ok(similitud("Leche entera 1L", "LECHE ENTERA 1 LT") >= 0.9);
   assert.ok(similitud("Leche entera 1L", "Yerba Playadito 1kg") < 0.2);
 });
+
+test("detecta el caso AC-09: misma cabeza aunque el resto difiera", () => {
+  // "Leche entera 1L" vs "LECHE SUP 1000CC": comparten el sustantivo → se sugiere.
+  assert.ok(similitud("Leche entera 1L", "LECHE SUP 1000CC") >= 0.34);
+  // Cabezas distintas no se confunden.
+  assert.ok(similitud("Leche entera 1L", "Aceite girasol 900ml") < 0.34);
+});
