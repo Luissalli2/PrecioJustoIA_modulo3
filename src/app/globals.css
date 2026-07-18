@@ -118,6 +118,19 @@ h1 {
   border: 1px solid var(--border);
 }
 
+.btn-chico {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.renombrar {
+  width: 100%;
+}
+
+.renombrar input {
+  margin-bottom: 8px;
+}
+
 /* --- Formulario --- */
 .campo {
   display: flex;

@@ -7,6 +7,7 @@ import { getDb } from "@/lib/db";
 import { obtenerProducto } from "@/lib/repo/productos";
 import { historialDeProducto } from "@/lib/repo/compras";
 import { formatearPrecio, formatearFechaISO } from "@/lib/formato";
+import RenombrarProducto from "./RenombrarProducto";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,10 @@ export default async function HistorialProducto({ params }: { params: Promise<{ 
       </p>
       <h1>{producto.nombre}</h1>
       <p className="subtitulo">Historial de precios por súper.</p>
+
+      <div className="acciones">
+        <RenombrarProducto id={producto.id} nombre={producto.nombre} />
+      </div>
 
       {historial.length === 0 ? (
         <div className="tarjeta">
