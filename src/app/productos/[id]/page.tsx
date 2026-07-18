@@ -4,10 +4,11 @@
 
 import { notFound } from "next/navigation";
 import { getDb } from "@/lib/db";
-import { obtenerProducto } from "@/lib/repo/productos";
+import { obtenerProducto, listarProductos } from "@/lib/repo/productos";
 import { historialDeProducto } from "@/lib/repo/compras";
 import { formatearPrecio, formatearFechaISO } from "@/lib/formato";
 import RenombrarProducto from "./RenombrarProducto";
+import FusionarProducto from "./FusionarProducto";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export default async function HistorialProducto({ params }: { params: Promise<{ 
   if (!producto) notFound();
 
   const historial = historialDeProducto(db, producto.id);
+  const otros = listarProductos(db).filter((p) => p.id !== producto.id);
 
   return (
     <main>
@@ -31,6 +33,7 @@ export default async function HistorialProducto({ params }: { params: Promise<{ 
 
       <div className="acciones">
         <RenombrarProducto id={producto.id} nombre={producto.nombre} />
+        <FusionarProducto destino={producto} otros={otros} />
       </div>
 
       {historial.length === 0 ? (
