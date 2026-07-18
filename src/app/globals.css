@@ -254,6 +254,27 @@ input:focus {
   margin: 6px 0 0;
 }
 
+.ocr-crudo {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.ocr-crudo summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.ocr-crudo pre {
+  margin: 8px 0 0;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
 .fila-nombre {
   flex: 1 1 auto;
   min-width: 0; /* evita overflow horizontal en 390px */

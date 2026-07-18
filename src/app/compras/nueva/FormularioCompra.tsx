@@ -52,15 +52,18 @@ export default function FormularioCompra({ supers }: Props) {
   // Estado del OCR (RF-01): idle → leyendo (con progreso) → ok | error.
   const [ocrEstado, setOcrEstado] = useState<"idle" | "leyendo" | "ok" | "error">("idle");
   const [ocrTexto, setOcrTexto] = useState("");
+  const [ocrCrudo, setOcrCrudo] = useState(""); // texto que leyó Tesseract (diagnóstico)
 
   async function leerTicket(file: File) {
     setOcrEstado("leyendo");
     setOcrTexto("Preparando…");
+    setOcrCrudo("");
     setError(null);
     try {
       const texto = await reconocerTicket(file, (p) => {
         setOcrTexto(p.fase === "leyendo" ? `Leyendo ticket… ${Math.round(p.progreso * 100)}%` : `${p.fase}…`);
       });
+      setOcrCrudo(texto);
       const items = parseTicket(texto);
       if (items.length === 0) {
         // El OCR no encontró líneas de producto legibles (AC-02, AC-06):
@@ -196,9 +199,17 @@ export default function FormularioCompra({ supers }: Props) {
         {ocrEstado === "leyendo" && <p className="hint">{ocrTexto}</p>}
         {ocrEstado === "ok" && <p className="hint">✅ Ticket leído. Revisá y corregí abajo antes de guardar.</p>}
         {ocrEstado === "error" && (
-          <p className="hint">
-            No pudimos leer el ticket. Probá con una foto más nítida o cargá los productos a mano.
-          </p>
+          <>
+            <p className="hint">
+              No pudimos leer el ticket. Probá con una foto más nítida o cargá los productos a mano.
+            </p>
+            {ocrCrudo.trim() !== "" && (
+              <details className="ocr-crudo">
+                <summary>Ver lo que leyó el OCR</summary>
+                <pre>{ocrCrudo}</pre>
+              </details>
+            )}
+          </>
         )}
       </div>
 
