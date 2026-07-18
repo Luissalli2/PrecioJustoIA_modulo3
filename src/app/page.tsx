@@ -1,12 +1,10 @@
-// Home (paso 0): lee de la base para demostrar que todo el circuito
-// Next.js -> SQLite funciona de punta a punta. Los flujos de carga, historial
-// y unificación llegan en los pasos siguientes del plan.
+// Home: resumen del catálogo con acceso a registrar una compra.
+// Lee la base en cada request (datos siempre frescos).
 
 import { getDb } from "@/lib/db";
 import { listarSupers } from "@/lib/repo/supers";
 import { listarProductos } from "@/lib/repo/productos";
 
-// Esta página lee la base en cada request (datos siempre frescos).
 export const dynamic = "force-dynamic";
 
 export default function Home() {
@@ -18,6 +16,12 @@ export default function Home() {
     <main>
       <h1>PrecioJusto</h1>
       <p className="subtitulo">Historial de precios de súper a partir de tus tickets.</p>
+
+      <div className="acciones">
+        <a className="btn" href="/compras/nueva">
+          + Registrar compra
+        </a>
+      </div>
 
       <div className="tarjeta">
         <div className="stat">
@@ -47,8 +51,7 @@ export default function Home() {
       )}
 
       <p className="nota">
-        Base generada automáticamente al arrancar. Los precios se muestran en pesos nominales
-        (sin ajuste por inflación).
+        Los precios se muestran en pesos nominales (sin ajuste por inflación).
       </p>
     </main>
   );
