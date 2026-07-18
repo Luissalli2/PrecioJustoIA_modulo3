@@ -9,6 +9,9 @@
 # Resúmenes / apuntes del curso en Word — no se suben a GitHub
 *.docx
 
+# Notas de desarrollo — quedan locales, no se suben a GitHub
+memorias_desarrollo_ia.md
+
 # Dependencias y build de Next.js
 /node_modules
 /.next
