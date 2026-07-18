@@ -11,7 +11,7 @@ registro del proyecto. La fuente de verdad sigue siendo el código, el `PRD.md` 
 1. Modelo de datos + capa de acceso ✅ (embebido en el paso 0)
 2. Registro manual de una compra ✅
 3. Catálogo, búsqueda e historial ✅
-4. Unificación de productos (sugerir / fusionar / renombrar) — pendiente
+4. Unificación de productos (sugerir / fusionar / renombrar) ✅
 5. OCR de tickets — pendiente
 6. Carga en varias fotos (multi-foto) — pendiente
 7. Cierre (repaso de los 23 AC + responsive 390px + versionado) — pendiente
@@ -54,6 +54,13 @@ Buscador en vivo en la home (RF-12, AC-20), página de historial `/productos/[id
 agrupado por súper y cronológico (RF-05, AC-08) con precios en pesos nominales, helpers
 de formato ($ es-AR y fecha DD/MM/AAAA). Verificado: historial correcto por súper,
 precios formateados, 404 para id inexistente o no numérico.
+
+### Paso 4 — Unificación de productos (la regla de oro del AGENTS)
+Tres acciones que el usuario dispara y confirma; el sistema nunca decide solo.
+- **Renombrar** (RF-08, AC-13): editar el nombre desde la página del producto conservando el historial. `PATCH /api/productos/[id]`.
+- **Fusionar** (RF-07, AC-12): elegir productos que son el mismo y unir sus historiales sin duplicar; los absorbidos se eliminan. `POST /api/productos/fusionar`.
+- **Sugerir** (RF-06, AC-09/10/11): al cargar una compra, el formulario busca coincidencias del catálogo por similitud y ofrece asociar a un producto existente. `GET /api/productos/candidatos` + soporte de `productoId` en la carga.
+- Ajuste clave de la similitud: se le dio **peso al primer token** (el sustantivo del producto) para que "Leche entera 1L" y "LECHE SUP 1000CC" matcheen (AC-09), sin confundir cabezas distintas. Cada sub-paso quedó en su propio commit + push.
 
 ## Gotchas / aprendizajes
 
