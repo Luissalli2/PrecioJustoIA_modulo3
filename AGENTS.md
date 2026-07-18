@@ -13,10 +13,16 @@ precios por producto y por súper, para consultarlo antes de volver a comprar.
 - Node 20+ · gestor de paquetes: npm
 
 ## Cómo correr
-> La app todavía no existe: estos comandos son la intención y se firman al construir.
 - Instalar: `npm install`
+- (Opcional) Datos de demo: `npm run seed`
 - Levantar (dev): `npm run dev` → http://localhost:3000
-- Tests: `npm test` (runner aún por configurar)
+- Build de producción: `npm run build`
+- Tests: `npm test` (usa `node --test`)
+
+La base SQLite se **genera sola** al arrancar (esquema en `db/schema.sql`); el
+archivo `.db` no se versiona (ver `.gitignore`). El OCR corre en el navegador
+con `tesseract.js` (la primera lectura baja el modelo de idioma; requiere
+conexión). Ver el README para el detalle.
 
 ## Qué NO hacer
 - Nunca asociar, fusionar ni renombrar productos de forma automática: el sistema
